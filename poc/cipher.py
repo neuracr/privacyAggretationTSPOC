@@ -1,6 +1,14 @@
+from typing import List
+
+
 class Cypher:
     """Defines the crypto operations"""
-    def __init__(self):
+    def __init__(self, p: int):
+        """Initialize the instance for cypher operations.
+
+        Args:
+            p: modulo prime for Zp
+        """
         print("f33d me numbers.")
 
     def setup(self, lamda):
@@ -13,7 +21,7 @@ class Cypher:
         capability sk0 .
         """
 
-    def noisy_enc(param, ski, t, x, r):
+    def noisy_enc(self, param, ski, t, x, r):
         """ During time step t, each
         participant calls the NoisyEnc algorithm to en-
         code its data x with noise r. The result is a
@@ -26,7 +34,7 @@ class Cypher:
         some underlying randomization function.
         """
 
-    def AggrDec(param, sk0, t, c1:List[int]):
+    def AggrDec(self, param, sk0, t, c1: List[int]):
         """The decryption
         algorithm takes in the public parameters param, a
         capability sk0 , and ciphertexts c1 , c2 , . . . , c2 for the
@@ -42,3 +50,7 @@ class Cypher:
         x) which is a noisy
         version of the targeted statistics f (x).
         """
+
+    def randomize(self, x: int, r: int):
+        """Khi function. Incorporate additive noise for encrypting the data."""
+        return (x + r) % self.p
