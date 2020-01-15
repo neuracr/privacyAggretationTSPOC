@@ -1,15 +1,15 @@
 import unittest
 from unittest import TestCase
-from ..ttp import TTP
+from ..ttp import TTPIntuition
 
 
-class Test_ttp(TestCase):
+class Test_ttpIntuition(TestCase):
     def setUp(self):
         DATA_MAX_BOUND = 2000  # delta
         N = 20  # number of participants
         P = 32323  # P as in Zp (prime number)
 
-        self.ttp = TTP(N, P)
+        self.ttp = TTPIntuition(N, P)
 
     def test_generate_rho_is_int(self):
         self.assertIsInstance(self.ttp.generate_rho(), int)

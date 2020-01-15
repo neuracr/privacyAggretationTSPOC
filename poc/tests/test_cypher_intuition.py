@@ -1,17 +1,18 @@
 import unittest
 from unittest import TestCase
-from ..cypher_intuition import CypherIntuition
+from ..cipher_intuition import CipherIntuition
 
 
-class Test_CypherIntuition(TestCase):
+class Test_CipherIntuition(TestCase):
     def setUp(self):
         DATA_MAX_BOUND = 2000  # delta
         N = 20  # number of participants
         P = 32323  # P as in Zp (prime number)
 
-        self.cypher = CypherIntuition(P)
+        self.cipher = CipherIntuition(P)
 
-    def test
+    # TODO
+
 
 if __name__ == '__main__':
     unittest.main()

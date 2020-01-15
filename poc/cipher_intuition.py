@@ -1,10 +1,10 @@
 from typing import List
 
 
-class CypherIntuition:
+class CipherIntuition:
     """Defines the crypto operations explained in section 5.1"""
     def __init__(self, p: int):
-        """Initialize the instance for cypher operations.
+        """Initialize the instance for cipher operations.
 
         Args:
             p: modulo prime for Zp
@@ -24,7 +24,7 @@ class CypherIntuition:
         """The decryption algorithm for the aggregator.
         Args:
             aggregator_rho: the zero share of the aggregator
-            c: list of cyphertexts (noisy encrypted)
+            c: list of ciphertexts (noisy encrypted)
         """
         return(aggregator_rho + sum(c))
 
