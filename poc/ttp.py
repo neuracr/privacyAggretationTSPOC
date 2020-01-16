@@ -1,6 +1,5 @@
 import logging
 import random
-from math import gcd
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +14,6 @@ dh_settings = [{
 }, {
     "p": 955103,
 }]
-
 
 
 class GeneratorException(Exception):

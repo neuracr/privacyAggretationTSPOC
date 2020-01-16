@@ -1,7 +1,6 @@
 import unittest
 import random
 from unittest import TestCase
-from math import gcd
 
 from ..cipher_basic import CipherBasic
 from ..ttp import TTPBasic
