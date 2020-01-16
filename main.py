@@ -5,16 +5,15 @@ from poc.participant import Participant
 from poc.ttp import TTPBasic
 
 DATA_MAX_BOUND = 2000  # delta
-P = 32323  # P as in Zp (prime number)
 logger = logging.getLogger(__name__)
 
 
 def experiment_basic(n, t):
     """Simulate an aggregation of n participants at time t."""
     # We create the different parties of the experiment
-    aggregator = Aggregator(P)
-    participants = [Participant(P, DATA_MAX_BOUND) for _ in range(n)]
-    
+    aggregator = Aggregator()
+    participants = [Participant(DATA_MAX_BOUND) for _ in range(n)]
+
     # The TTP chooses a g, p, P
     ttp = TTPBasic()
 
@@ -47,7 +46,7 @@ def experiment_basic(n, t):
     real_res = 0
     for p in participants:
         real_res += p.x
-    real_res %= P
+    real_res %= ttp.P
     logger.info("real sum: %d." % (real_res))
 
 

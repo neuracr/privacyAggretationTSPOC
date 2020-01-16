@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class Participant:
-    def __init__(self, p: int, max: int):
+    def __init__(self, max: int):
         """Creates a participant.
 
         The Participant class can work in the "intuition" and in the "basic"
@@ -16,7 +16,7 @@ class Participant:
             p: prime defining the Zp additive group
             max: maximum value for the stat
         """
-        self.p = p
+        self.p = None
         self.g = None
         self.P = None
         self.x = random.randint(0, max)

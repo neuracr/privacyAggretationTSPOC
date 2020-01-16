@@ -3,15 +3,14 @@ from unittest import TestCase
 from ..cipher_intuition import CipherIntuition
 
 
-class Test_CipherIntuition(TestCase):
-    def setUp(self):
-        DATA_MAX_BOUND = 2000  # delta
-        N = 20  # number of participants
-        P = 32323  # P as in Zp (prime number)
+# class Test_CipherIntuition(TestCase):
+#     def setUp(self):
+#         DATA_MAX_BOUND = 2000  # delta
+#         N = 20  # number of participants
 
-        self.cipher = CipherIntuition(P)
+#         self.cipher = CipherIntuition(P)
 
-    # TODO
+#     # TODO
 
 
 if __name__ == '__main__':

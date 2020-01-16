@@ -6,8 +6,8 @@ logger = logging.getLogger(__name__)
 
 
 class Aggregator:
-    def __init__(self, p: int):
-        self.p = p
+    def __init__(self):
+        self.p = None
         self.g = None
         self.P = None
         self.cipher = None
