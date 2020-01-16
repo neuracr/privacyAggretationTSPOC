@@ -1,20 +1,38 @@
 import logging
+import random
 
+from .cipher_basic import CipherBasic
 
 logger = logging.getLogger(__name__)
 
 
 class Participant:
-    def __init__(self, p: int):
+    def __init__(self, p: int, max: int):
         """Creates a participant.
 
         The Participant class can work in the "intuition" and in the "basic"
         case.
         Args:
             p: prime defining the Zp additive group
+            max: maximum value for the stat
         """
         self.p = p
         self.g = None
+        self.x = random.randint(0, max)
+        self.max = max
+        self.sk = None
+        self.cipher = None
+
+    def init_cipher_basic(self):
+        self.cipher = CipherBasic(self.p, self.g, self.sk)
+
+    def noisy_enc(self, t: int):
+        r = self.pick_noise()
+        return self.cipher.noisy_enc(self.x, r, t)
+
+    def pick_noise(self):
+        # TODO
+        return 0
 
     def set_g(self, g):
         """basic: Receives the parameter from the TTP"""

@@ -1,5 +1,7 @@
 import logging
 
+from .cipher_basic import CipherBasic
+
 logger = logging.getLogger(__name__)
 
 
@@ -7,6 +9,17 @@ class Aggregator:
     def __init__(self, p: int):
         self.p = p
         self.g = None
+        self.cipher = None
+        self.contributions = []
+
+    def init_cipher_basic(self):
+        self.cipher = CipherBasic(self.p, self.g, self.sk)
+
+    def append_contribution(self, c):
+        self.contributions.append(c)
+
+    def aggregate_basic(self, t):
+        return self.cipher.aggrDec(self.contributions, t)
 
     def set_g(self, g):
         """basic: Receives the parameter from the TTP"""

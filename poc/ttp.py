@@ -43,23 +43,25 @@ class TTPIntuition:
 class TTPBasic:
     """Trusted third party entity that deals public param g and sk as in 5.2"""
 
-    def __init__(self, n: int, p: int):
+    def __init__(self, p: int, l: int):
         """
         Args:
             p: p as in Zp
+            l: lambda security parameter
         """
         self.p = p
         self._g = random.randint(0, p-1)
         self.generator = None
+        self.l = l
 
     def _init_generator(self, n):
         """Create a generator for the key generator for n participants."""
         _sum = 0
         for _ in range(n):
-            rand = random.randint(0, self.p - 1)
-            _sum = (_sum + rand) % self.p
+            rand = random.randint(-2**(self.l-1), 2**(self.l-1))
+            _sum = _sum + rand
             yield(rand)
-        yield(self.p - _sum)
+        yield(0 - _sum)
 
     def init_generator(self, n):
         """Initialize the key generator for n participants."""

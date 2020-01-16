@@ -17,7 +17,7 @@ class CipherBasic:
         self.g = g
         self.sk = sk
 
-    def gen_h(self, t: int):
+    def _gen_h(self, t: int):
         """Generates the hash for R derivation.
         Args:
             t: time slot id
@@ -31,31 +31,34 @@ class CipherBasic:
             r: noise to add to the value for privacy preservation
             t: time slot id
         """
-        H = self.gen_h(t)
+        H = self._gen_h(t)
+        if self.sk < 0:
+            H = self.modinv(H, self.p)
         return((
-                pow(self._g, (x+r), self.p) * pow(H, self.sk, self.p)
+                pow(self.g, (x+r), self.p) * pow(H, abs(self.sk), self.p)
                 ) % self.p)
 
-    def AggrDec(self, c: List[int], t: int):
+    def aggrDec(self, c: List[int], t: int):
         """The decryption algorithm for the aggregator.
         Args:
             c: list of ciphertexts (noisy encrypted)
             t: time slot id
         """
-        H = self.gen_h(t)
+        H = self._gen_h(t)
         prod = 1
         for ci in c:
             prod = (prod * ci) % self.p
         V = (pow(H, self.sk, self.p) * prod) % self.p
-        return(self.discrete_log(V, self.g))
+        return(self._discrete_log(V))
 
     def randomize(self, x: int, r: int):
         """Khi function. Incorporate additive noise for encrypting the data."""
         return (x + r) % self.p
 
-    def discrete_log(self, x: int):
+    def _discrete_log(self, x: int):
         """Computes the discrete logarithm of x base g mod p.
-        adapted from https://www.geeksforgeeks.org/discrete-logarithm-find-integer-k-ak-congruent-modulo-b/"""
+        adapted from https://www.geeksforgeeks.org/discrete-logarithm-find
+        -integer-k-ak-congruent-modulo-b/"""
         n = int(math.sqrt(self.p) + 1)
 
         gn = pow(self.g, n, self.p)
@@ -76,3 +79,18 @@ class CipherBasic:
                     return(ans)
             cur = (cur * self.g) % self.p
         return(-1)
+
+    # https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python
+    def egcd(self, a, b):
+        if a == 0:
+            return (b, 0, 1)
+        else:
+            g, y, x = self.egcd(b % a, a)
+            return (g, x - (b // a) * y, y)
+
+    def modinv(self, a, m):
+        g, x, y = self.egcd(a, m)
+        if g != 1:
+            raise Exception('modular inverse does not exist')
+        else:
+            return x % m
