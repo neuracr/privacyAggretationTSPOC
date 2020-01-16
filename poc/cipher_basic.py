@@ -48,7 +48,9 @@ class CipherBasic:
         prod = 1
         for ci in c:
             prod = (prod * ci) % self.p
-        V = (pow(H, self.sk, self.p) * prod) % self.p
+        if self.sk < 0:
+            H = self.modinv(H, self.p)
+        V = (pow(H, abs(self.sk), self.p) * prod) % self.p
         return(self._discrete_log(V))
 
     def randomize(self, x: int, r: int):
