@@ -1,28 +1,35 @@
-from typing import List
+from typing import List, Optional
 import hashlib
+import random
 import math
 
 
 class CipherBasic:
     """Defines the crypto operations explained in section 5.1"""
-    def __init__(self, p: int, g: int, sk: int):
+    def __init__(self, p: int, P: int, g: int,
+                 sk: Optional[int] = None):
         """Initialize the instance for cipher operations.
 
         Args:
-            p: modulo prime for Zp
+            p: order of the group
+            P: modulo of the group
             g: public parameter
             sk: secret key for R derivation
         """
         self.p = p
+        self.P = P
         self.g = g
         self.sk = sk
 
-    def _gen_h(self, t: int):
+    def _gen_h(self, t: int) -> int:
         """Generates the hash for R derivation.
         Args:
             t: time slot id
         """
-        return(int(hashlib.sha224(str(t).encode()).hexdigest(), 16) % self.p)
+        e = int(hashlib.sha224(str(t).encode()).hexdigest(), 16) % self.p
+        h = pow(self.g, e, self.P)
+        hinv = pow(self.g, self.p - e, self.P)
+        return(h, hinv)
 
     def noisy_enc(self, x, r, t: int):
         """Encrypt the noised value using the derived key.
@@ -31,12 +38,12 @@ class CipherBasic:
             r: noise to add to the value for privacy preservation
             t: time slot id
         """
-        H = self._gen_h(t)
+        H, Hinv = self._gen_h(t)
         if self.sk < 0:
-            H = self.modinv(H, self.p)
+            H = Hinv
         return((
-                pow(self.g, (x+r), self.p) * pow(H, abs(self.sk), self.p)
-                ) % self.p)
+                pow(self.g, (x+r), self.P) * pow(H, abs(self.sk), self.P)
+                ) % self.P)
 
     def aggrDec(self, c: List[int], t: int):
         """The decryption algorithm for the aggregator.
@@ -44,43 +51,51 @@ class CipherBasic:
             c: list of ciphertexts (noisy encrypted)
             t: time slot id
         """
-        H = self._gen_h(t)
+        H, Hinv = self._gen_h(t)
         prod = 1
         for ci in c:
-            prod = (prod * ci) % self.p
+            prod = (prod * ci) % self.P
         if self.sk < 0:
-            H = self.modinv(H, self.p)
-        V = (pow(H, abs(self.sk), self.p) * prod) % self.p
+            H = Hinv
+        V = (pow(H, abs(self.sk), self.P) * prod) % self.P
         return(self._discrete_log(V))
 
     def randomize(self, x: int, r: int):
         """Khi function. Incorporate additive noise for encrypting the data."""
         return (x + r) % self.p
 
-    def _discrete_log(self, x: int):
-        """Computes the discrete logarithm of x base g mod p.
-        adapted from https://www.geeksforgeeks.org/discrete-logarithm-find
-        -integer-k-ak-congruent-modulo-b/"""
-        n = int(math.sqrt(self.p) + 1)
+    # def _discrete_log(self, x: int):
+    #     """Computes the discrete logarithm of x base g mod p.
+    #     adapted from https://www.geeksforgeeks.org/discrete-logarithm-find
+    #     -integer-k-ak-congruent-modulo-b/"""
+    #     n = int(math.sqrt(self.p) + 1)
 
-        gn = pow(self.g, n, self.p)
-        value = [0] * self.p
+    #     gn = pow(self.g, n, self.p)
+    #     value = [0] * self.p
 
-        cur = gn
-        for i in range(1, n + 1):
-            if (value[cur] == 0):
-                value[cur] = i
-            cur = (cur * gn) % self.p
+    #     cur = gn
+    #     for i in range(1, n + 1):
+    #         if (value[cur] == 0):
+    #             value[cur] = i
+    #         cur = (cur * gn) % self.p
 
-        cur = x
-        for i in range(n + 1):
-            # Calculate (x ^ j) * g and check for collision
-            if (value[cur] > 0):
-                ans = value[cur] * n - i
-                if (ans < self.p):
-                    return(ans)
-            cur = (cur * self.g) % self.p
-        return(-1)
+    #     cur = x
+    #     for i in range(n + 1):
+    #         # Calculate (x ^ j) * g and check for collision
+    #         if (value[cur] > 0):
+    #             ans = value[cur] * n - i
+    #             if (ans < self.p):
+    #                 return(ans)
+    #         cur = (cur * self.g) % self.p
+    #     return(-1)
+
+    def _discrete_log(self, c):
+        s = 1
+        for i in range(self.p):
+            s = (s * self.g) % self.P
+            if s == c:
+                return i + 1
+        return -1
 
     # https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python
     def egcd(self, a, b):
@@ -96,3 +111,24 @@ class CipherBasic:
             raise Exception('modular inverse does not exist')
         else:
             return x % m
+
+
+def isPrime(n): 
+    # Corner cases 
+    if (n <= 1) : 
+        return False
+    if (n <= 3) : 
+        return True
+  
+    # This is checked so that we can skip  
+    # middle five numbers in below loop 
+    if (n % 2 == 0 or n % 3 == 0) : 
+        return False
+  
+    i = 5
+    while(i * i <= n) : 
+        if (n % i == 0 or n % (i + 2) == 0) : 
+            return False
+        i = i + 6
+  
+    return True
