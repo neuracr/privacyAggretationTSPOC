@@ -9,11 +9,12 @@ class Aggregator:
     def __init__(self, p: int):
         self.p = p
         self.g = None
+        self.P = None
         self.cipher = None
         self.contributions = []
 
     def init_cipher_basic(self):
-        self.cipher = CipherBasic(self.p, self.g, self.sk)
+        self.cipher = CipherBasic(self.p, self.P, self.g, self.sk)
 
     def append_contribution(self, c):
         self.contributions.append(c)

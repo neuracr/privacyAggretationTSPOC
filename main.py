@@ -14,22 +14,24 @@ def experiment_basic(n, t):
     # We create the different parties of the experiment
     aggregator = Aggregator(P)
     participants = [Participant(P, DATA_MAX_BOUND) for _ in range(n)]
-    ttp = TTPBasic(n, P)
+    
+    # The TTP chooses a g, p, P
+    ttp = TTPBasic()
 
     # initialization
-    # The TTP chooses a g, p, and generates the sk for each participant and
+    # The TTP generates the sk for each participant and
     # the aggregator
     ttp.init_generator(n)
 
     # The TTP distributes the parameter and sk to the participants
     # The aggregator gets sk0
-    aggregator.g = ttp.get_g()
+    aggregator.g, aggregator.P, aggregator.p = ttp.g, ttp.P, ttp.p
     aggregator.sk = ttp.generate_sk()
     aggregator.init_cipher_basic()
 
     # The participants receive the parameter and their key
     for p in participants:
-        p.g = ttp.get_g()
+        p.g, p.P, p.p = ttp.g, ttp.P, ttp.p
         p.sk = ttp.generate_sk()
         p.init_cipher_basic()
 

@@ -18,13 +18,14 @@ class Participant:
         """
         self.p = p
         self.g = None
+        self.P = None
         self.x = random.randint(0, max)
         self.max = max
         self.sk = None
         self.cipher = None
 
     def init_cipher_basic(self):
-        self.cipher = CipherBasic(self.p, self.g, self.sk)
+        self.cipher = CipherBasic(self.p, self.P, self.g, self.sk)
 
     def noisy_enc(self, t: int):
         r = self.pick_noise()

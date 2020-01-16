@@ -81,10 +81,10 @@ class TTPBasic:
         """Create a generator for the key generator for n participants."""
         _sum = 0
         for _ in range(n):
-            rand = random.randint(-2**(self.lam-1), 2**(self.lam-1))
-            _sum = _sum + rand
+            rand = random.randint(0, self.p-1)
+            _sum = (_sum + rand) % self.p
             yield(rand)
-        yield(0 - _sum)
+        yield(self.p - _sum)
 
     def init_generator(self, n):
         """Initialize the key generator for n participants."""
