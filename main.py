@@ -4,15 +4,20 @@ from poc.aggregator import Aggregator
 from poc.participant import Participant
 from poc.ttp import TTPBasic
 
-DATA_MAX_BOUND = 2000  # delta
+big_delta = 2000  # delta
+eps = 0.5
+small_delta = 0.001
+n = 5
+gamma = 5/n
+
 logger = logging.getLogger(__name__)
 
 
-def experiment_basic(n, t):
+def experiment_basic(n, t, eps, small_delta, big_delta, gamma):
     """Simulate an aggregation of n participants at time t."""
     # We create the different parties of the experiment
     aggregator = Aggregator()
-    participants = [Participant(DATA_MAX_BOUND) for _ in range(n)]
+    participants = [Participant(big_delta) for _ in range(n)]
 
     # The TTP chooses a g, p, P
     ttp = TTPBasic()
@@ -30,6 +35,11 @@ def experiment_basic(n, t):
 
     # The participants receive the parameter and their key
     for p in participants:
+        p.small_delta = small_delta
+        p.eps = eps
+        p.gamma = gamma
+        p.n = n
+
         p.g, p.P, p.p = ttp.g, ttp.P, ttp.p
         p.sk = ttp.generate_sk()
         p.init_cipher_basic()
@@ -49,7 +59,9 @@ def experiment_basic(n, t):
     real_res %= ttp.P
     logger.info("real sum: %d." % (real_res))
 
+    return(res, real_res)
+
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    experiment_basic(20, 1337)
+    logging.basicConfig(level=logging.DEBUG)
+    experiment_basic(n, 1337, eps, small_delta, big_delta, gamma)

@@ -67,7 +67,7 @@ class TTPBasic:
 
         # security parameter for the sk
         self.lam = l
-
+        logger.debug("p:%d P:%d g:%d" % (self.p, self.P, self.g))
     # def pick_g(self):
     #     """Picks a generator of Zp*"""
     #     g = random.randint(0, self.p-1)
@@ -106,7 +106,6 @@ def generate_group(P):
     Returns:
         q: the order of the group (prime)
         g: a generator
-        # l: list of elements
     """
     # http://u.cs.biu.ac.il/~lindell/89-656/group%20example.pdf
 

@@ -40,7 +40,7 @@ class CipherBasic:
         if self.sk < 0:
             H = Hinv
         return((
-                pow(self.g, (x+r), self.P) * pow(H, abs(self.sk), self.P)
+                pow(self.g, (x+r) % self.P, self.P) * pow(H, abs(self.sk), self.P)
                 ) % self.P)
 
     def aggrDec(self, c: List[int], t: int):
