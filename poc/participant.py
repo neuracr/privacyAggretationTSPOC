@@ -24,7 +24,7 @@ class Participant:
         self.p = None
         self.g = None
         self.P = None
-        self.x = random.randint(300, max-300)
+        self.x = random.randint(0, max)
         self.big_delta = max
         self.sk = None
         self.cipher = None
