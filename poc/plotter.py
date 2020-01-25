@@ -25,7 +25,7 @@ eps_slider = Slider(title="ε", value=float(eps.value), start=0, end=2, step=0.1
 small_delta = TextInput(title="δ", value=str(0.01))
 small_delta_slider = Slider(title="δ", value=float(small_delta.value), start=0, end=2, step=0.01)
 big_delta = TextInput(title="Δ", value=str(87))
-big_delta_slider = Slider(title="Δ", value=float(big_delta.value), start=0, end=2000, step=1)
+big_delta_slider = Slider(title="Δ", value=float(big_delta.value), start=1, end=2000, step=1)
 gamma = TextInput(title="γ", value=str(0.2))
 gamma_slider = Slider(title="γ", value=float(gamma.value), start=0, end=1, step=0.1)
 
@@ -51,6 +51,9 @@ p.xgrid.grid_line_color = None
 # ds = r.data_source
 
 
+def modular_abs(x, y, p):
+    return(min((x-y) % p, (y-x) % p))
+
 # create a callback that will add a number in a random location
 def update():
 
@@ -70,12 +73,12 @@ def update():
 
     new_data = dict(n=[], mean_error=[], std_deviation=[])
     for n in number_participants:
-        res, real = experiment_basic(n, 1337, eps_val, small_delta_val,
-                                     big_delta_val, gamma_val)
+        res, real, p = experiment_basic(n, 1337, eps_val, small_delta_val,
+                                        big_delta_val, gamma_val)
 
         new_data['n'].append(n)
-        new_data['mean_error'].append(abs(real-res)/real*100)
-        new_data['std_deviation'].append(abs(real-res)/real*100)
+        new_data['mean_error'].append(modular_abs(real, res, p)/real*100)
+        new_data['std_deviation'].append(modular_abs(real, res, p)/real*100)
         print(res, real)
     source.data = new_data
 

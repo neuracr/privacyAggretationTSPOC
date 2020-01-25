@@ -60,14 +60,14 @@ def experiment_basic(n, t, eps, small_delta, big_delta, gamma):
     real_res %= ttp.p
     logger.info("real sum: %d." % (real_res))
 
-    return(res, real_res)
+    return(res, real_res, ttp.p)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.CRITICAL)
     L=[]
     for i in range(1000):
-        res,real_res=experiment_basic(n, 1337, eps, small_delta, big_delta, gamma)
+        res, real_res, p=experiment_basic(n, 1337, eps, small_delta, big_delta, gamma)
         L.append((abs(res-real_res)/real_res)*100)
-    plt.hist(L,bins=10)
+    plt.hist(L, bins=10)
     plt.show()
