@@ -3,7 +3,6 @@ import logging
 from poc.aggregator import Aggregator
 from poc.participant import Participant
 from poc.ttp import TTPBasic
-import numpy as np
 import matplotlib.pyplot as plt
 big_delta = 2000  # delta
 eps = 0.5
@@ -65,9 +64,10 @@ def experiment_basic(n, t, eps, small_delta, big_delta, gamma):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.CRITICAL)
-    L=[]
+    L = []
     for i in range(1000):
-        res, real_res, p=experiment_basic(n, 1337, eps, small_delta, big_delta, gamma)
+        res, real_res, p = experiment_basic(n, 1337, eps, small_delta,
+                                            big_delta, gamma)
         L.append((abs(res-real_res)/real_res)*100)
     plt.hist(L, bins=10)
     plt.show()
