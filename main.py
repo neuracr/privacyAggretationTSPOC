@@ -51,6 +51,7 @@ def experiment_basic(n, t, eps, small_delta, big_delta, gamma):
     # Once all participants have sent their contribution, the aggretator
     # ... aggregates
     res = aggregator.aggregate_basic(t)
+    logger.info("modulo for the experiment: %d" % (ttp.p))
     logger.info("result of the aggregation: %d." % (res))
 
     real_res = 0
@@ -58,16 +59,23 @@ def experiment_basic(n, t, eps, small_delta, big_delta, gamma):
         real_res += p.x
     real_res %= ttp.p
     logger.info("real sum: %d." % (real_res))
+    logger.info("error: %d" % (modular_abs(res, real_res, ttp.p)))
 
     return(res, real_res, ttp.p)
 
 
+def modular_abs(x, y, p):
+    return(min((x-y) % p, (y-x) % p))
+
+
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.CRITICAL)
-    L = []
-    for i in range(1000):
-        res, real_res, p = experiment_basic(n, 1337, eps, small_delta,
-                                            big_delta, gamma)
-        L.append((abs(res-real_res)/real_res)*100)
-    plt.hist(L, bins=10)
-    plt.show()
+    logging.basicConfig(level=logging.INFO)
+    # L = []
+    # for i in range(1000):
+    #     res, real_res, p = experiment_basic(n, 1337, eps, small_delta,
+    #                                         big_delta, gamma)
+    #     L.append((abs(res-real_res)/real_res)*100)
+    # plt.hist(L, bins=10)
+    # plt.show()
+    res, real_res, p = experiment_basic(n, 1337, eps, small_delta,
+                                        big_delta, gamma)

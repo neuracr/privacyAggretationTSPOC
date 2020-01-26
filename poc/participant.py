@@ -38,7 +38,7 @@ class Participant:
 
     def noisy_enc(self, t: int):
         r = self.pick_noise()
-        logger.info("noise: %d" % (r))
+        logger.debug("noise: %d" % (r))
         return self.cipher.noisy_enc(self.x, r, t)
 
     def geom(self, alpha):
