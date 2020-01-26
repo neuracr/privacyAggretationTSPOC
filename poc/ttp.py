@@ -110,6 +110,6 @@ def generate_group(P):
     # http://u.cs.biu.ac.il/~lindell/89-656/group%20example.pdf
 
     # we assume p is a safe prime (p = 2q+1 and q is prime)
-    q = int(P-1/2)
+    q = int((P-1)/2)
     g = int(pow(random.randint(2, 1000), 2, P))
     return(q, g)

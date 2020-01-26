@@ -36,12 +36,13 @@ class CipherBasic:
             r: noise to add to the value for privacy preservation
             t: time slot id
         """
+        # print("participant val: %d , noise: %d " % (x,r))
         H, Hinv = self._gen_h(t)
         if self.sk < 0:
             H = Hinv
         return((
-                pow(self.g, (x+r) % self.P, self.P) * pow(H, abs(self.sk), self.P)
-                ) % self.P)
+                pow(self.g, (x+r) % self.P, self.P) *
+                pow(H, abs(self.sk), self.P)) % self.P)
 
     def aggrDec(self, c: List[int], t: int):
         """The decryption algorithm for the aggregator.

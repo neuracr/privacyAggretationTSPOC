@@ -36,7 +36,7 @@ geo_text = Paragraph(text="")
 # Toggle the simulation on/off
 enable_1exp_btn = Toggle(active=True, label="Enable simulation")
 enable_refine_btn = Toggle(active=False, label="Enable error stat refining")
-
+err_percent_btn = Toggle(active=False, label="Computes all errors in percent")
 # tracks if one of the parameter changed to know if we start the stats from 0 again
 has_param_changed = True
 
@@ -76,8 +76,11 @@ def update_1exp():
                                         big_delta_val, gamma_val)
 
         new_data['n'].append(n)
-        new_data['error'].append(modular_abs(real, res, p))#/real*100)
-        print(res, real, p)
+        err = modular_abs(real, res, p)
+        if err_percent_btn.active:
+            err = err/real*100
+        new_data['error'].append(err)
+        print(res, real, p, modular_abs(real, res, p), err)
     source_1exp.data = new_data
 
 
@@ -150,7 +153,9 @@ def refine_stat(step):
     for i in range(len(number_participants)):
         res, real, p = experiment_basic(number_participants[i], 1337, eps_val, small_delta_val,
                                         big_delta_val, gamma_val)
-        err = modular_abs(real, res, p)#/real*100
+        err = modular_abs(real, res, p)
+        if err_percent_btn.active:
+            err = err/real*100
 
         current_iteration_nb = source_stat.data['n_iterations'][i]+1
         new_data['n_participants'] += [number_participants[i]]
@@ -163,6 +168,11 @@ def refine_stat(step):
     source_stat.data = new_data
     for x in source_stat.data.keys():
         print(x, str(source_stat.data[x]))
+
+
+def on_err_percent_btn_changed(attr, old, new):
+    global has_param_changed
+    has_param_changed = True
 
 
 def sanitize_params():
@@ -184,13 +194,15 @@ l = layout([
     [small_delta, small_delta_slider],
     [big_delta, big_delta_slider],
     [gamma, gamma_slider],
-    [enable_1exp_btn, geo_text, enable_refine_btn],
+    [err_percent_btn, enable_1exp_btn, geo_text, enable_refine_btn],
     [p_1exp, p_error_stat]
 ])
 
 controls = [eps, small_delta, big_delta, gamma]
 for control in controls:
     control.on_change('value', lambda attr, old, new: update_1exp())
+
+err_percent_btn.on_change('active', on_err_percent_btn_changed)
 
 enable_1exp_btn.on_change('active', lambda attr, old, new: update_1exp())
 sliders = [eps_slider, small_delta_slider, big_delta_slider, gamma_slider]
