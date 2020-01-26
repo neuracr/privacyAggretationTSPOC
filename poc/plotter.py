@@ -48,7 +48,8 @@ has_param_changed = True
 source_1exp = ColumnDataSource(data=dict(n=[], error=[]))
 
 p_1exp = figure(plot_height=350, title="1 time error", x_axis_type="log",
-                y_range=[0, 100], tools="ypan, ywheel_pan, ywheel_zoom")
+                y_range=[0, 100], tools="ypan, ywheel_pan, ywheel_zoom",
+                y_axis_label="error", x_axis_label="nb participants")
 glyph = VBar(x='n', top='error', bottom=0.1, width="n", hatch_scale=None)
 p_1exp.add_glyph(source_1exp, glyph)
 p_1exp.y_range.start = 0
@@ -126,7 +127,9 @@ p_error_stat = figure(plot_height=350,
                       title="empirical mean, std deviation error",
                       x_axis_type="log",
                       y_range=[0, 100],
-                      tools="ypan, ywheel_pan, ywheel_zoom")
+                      tools="ypan, ywheel_pan, ywheel_zoom",
+                      y_axis_label="error",
+                      x_axis_label="nb participants")
 
 # mean error bar
 glyph = VBar(x='n_participants', top='mean_error', bottom=0.1,
