@@ -2,6 +2,10 @@
 
 Implementating the summation protocol presented.
 
+## Disclaimer
+
+This is a university class assignement to study the research paper. I am not linked to the paper authors. The purpose of this code is to give an insight a visual approach on the results. This code should **not** be used for production. I am not maintaining this code but I'm open to pull requests to improve/fix it.
+
 ## Project structure
 
 A backend part made out of:
